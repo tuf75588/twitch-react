@@ -7,7 +7,8 @@ import './index.css';
 
 class App extends Component {
   state = {
-    data: []
+    data: [],
+    loading: false,
   };
 
   componentDidMount() {
