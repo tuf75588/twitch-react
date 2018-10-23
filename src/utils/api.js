@@ -1,4 +1,4 @@
-const streams = [
+export const streams = [
   'Eviltoaster',
   'Cuppcaake',
   'Okpai',
@@ -12,24 +12,35 @@ const streams = [
 
 const APP_ID = 'y6kclh4aarn3d49fxftx9nztvp6097';
 
-export const makeRequest = async () => {
-  const endpoints = streams.map(user => {
-    return `https://api.twitch.tv/kraken/streams/${user}/?client_id=${APP_ID}`;
-  });
-  try {
-    const data = await Promise.all(
-      endpoints.map(url =>
-        fetch(url)
-          .then(res => {
-            return res.json();
-          })
-          .then(data => {
-            return data;
-          })
-      )
-    );
-    return data;
-  } catch (error) {
-    console.error(error);
-  }
+const getChannelData = async username => {
+  const url = `https://api.twitch.tv/kraken/channels/${username}?client_id=${APP_ID}`;
+  const request = await fetch(url);
+  const response = request.json();
+  return response;
+};
+export const getUserData = async username => {
+  const url = `https://api.twitch.tv/kraken/streams/${username}?client_id=${APP_ID}`;
+  const request = await fetch(url);
+  const response = await request.json();
+  return response;
+};
+
+export const getTwitchData = async username => {
+  return await Promise.all([getChannelData(username), getUserData(username)]).then(
+    ([user, stream]) => {
+      if (user.error) {
+        return {
+          name: username,
+          error: user.message
+        };
+      }
+      return {
+        name: user.display_name,
+        url: user.url,
+        logo: user.logo,
+        game: user.game,
+        status: stream.stream
+      };
+    }
+  );
 };

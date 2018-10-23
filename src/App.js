@@ -1,25 +1,39 @@
 import React, { Component } from 'react';
 
-import { makeRequest } from './utils/api';
+import { getTwitchData, streams, getUserData } from './utils/api';
 
 import './index.css';
-// background-color: #4b367c
 
+import Header from './components/Header/Header';
+
+// background-color: #4b367c
 class App extends Component {
   state = {
     data: [],
-    loading: false,
+    loading: false
   };
-
   componentDidMount() {
-    makeRequest().then(data => {
-      this.setState(() => ({
-        data
-      }));
-    });
+    this.loadData = this.fetchData();
   }
+
+  fetchData = () => {
+    const streamers = [
+      'eviltoaster',
+      'cuppcaake',
+      'okpai',
+      'electroslag',
+      'freecodecamp',
+      'hungricorgi',
+      'just_stevo',
+      'bobross'
+    ];
+  };
   render() {
-    return <span>hi</span>;
+    return (
+      <div>
+        <Header name="Twitch v5 API Viewer" />
+      </div>
+    );
   }
 }
 
