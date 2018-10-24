@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { getTwitchData, streams, getUserData } from './utils/api';
+import { getTwitchData } from './utils/api';
 
 import './index.css';
 
@@ -12,23 +12,28 @@ import DisplayButtons from './components/DisplayButtons/DisplayButtons';
 class App extends Component {
   state = {
     data: [],
-    loading: false
+    originalData: []
   };
   componentDidMount() {
     this.loadData = this.fetchData();
   }
+  displayAllUsers = () => {
+    const copy = [...this.state.originalData];
+    this.setState(prevState => ({
+      data: copy
+    }));
+  };
   displayOnlineUsers = () => {
-    const allUsers = [...this.state.data];
+    //take the previous state, and update it to stream status that is truthy
+    this.setState(prevState => ({
+      data: [...prevState.originalData].filter(x => x.status)
+    }));
   };
   displayOfflineUsers = () => {
-    this.setState(
-      () => ({
-        data: this.state.data.filter(user => {
-          return !user.status;
-        })
-      }),
-      () => this.loadData
-    );
+    //take the previous state, and update it to streams with a status of null
+    this.setState(prevState => ({
+      data: [...prevState.originalData].filter(x => x.status === null)
+    }));
   };
 
   fetchData = () => {
@@ -46,7 +51,8 @@ class App extends Component {
     const data = streamers.map(user => getTwitchData(user));
     const results = Promise.all(data).then(res => {
       this.setState(() => ({
-        data: res
+        data: res,
+        originalData: res
       }));
     });
   };
@@ -57,6 +63,7 @@ class App extends Component {
         <DisplayButtons
           displayOnline={this.displayOnlineUsers}
           displayOfflineUsers={this.displayOfflineUsers}
+          displayAllUsers={this.displayAllUsers}
         />
         <StreamContainer streams={this.state.data} />
       </div>

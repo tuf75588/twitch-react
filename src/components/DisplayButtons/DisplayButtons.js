@@ -16,7 +16,9 @@ const buttonStyles = css`
 const DisplayButtons = props => {
   return (
     <div className={buttonDivStyles}>
-      <button className={buttonStyles}>All</button>
+      <button className={buttonStyles} onClick={() => props.displayAllUsers()}>
+        All
+      </button>
       <button onClick={() => props.displayOnline()} className={buttonStyles}>
         Online
       </button>

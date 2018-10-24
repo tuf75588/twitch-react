@@ -36,7 +36,7 @@ const StreamContainer = props => {
         className="streams"
         style={{ display: 'flex', padding: '0.5em', border: '1px solid white' }}
       >
-        <img src={logo} className={logoImageStyle} />
+        <img src={logo} className={logoImageStyle} onClick={() => window.open(url)} />
         <div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <h1 className={nameHeaderStyle}>{name}</h1>
